@@ -21,8 +21,10 @@ export interface Invoice {
   id: number
   lineItems: LineItem[]
   paid: number
+  paidOn: string
   paymentMethod: string
   refund: number
+  refundedOn: string
   serviceFees: number
   statusCode: string
   total: number
