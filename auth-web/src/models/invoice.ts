@@ -17,14 +17,14 @@ export interface Invoice {
   corpTypeCode: string
   createdBy: string
   createdName: string
-  createdOn: string
+  paymentDate: string
   id: number
   lineItems: LineItem[]
   paid: number
   paidOn: string
   paymentMethod: string
   refund: number
-  refundedOn: string
+  refundDate: string
   serviceFees: number
   statusCode: string
   total: number
