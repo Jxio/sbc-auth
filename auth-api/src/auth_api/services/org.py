@@ -147,7 +147,7 @@ class Org:  # pylint: disable=too-many-public-methods
 
         org.commit()
 
-        ProductService.update_org_product_keycloak_groups(org.id)
+        # ProductService.update_org_product_keycloak_groups(org.id)
 
         current_app.logger.info(f'<created_org org_id:{org.id}')
 
@@ -174,7 +174,7 @@ class Org:  # pylint: disable=too-many-public-methods
             'relationship_status': TaskRelationshipStatus.PENDING_STAFF_REVIEW.value
         }
         TaskService.create_task(task_info=task_info, do_commit=False)
-        Org.send_staff_review_account_reminder(relationship_id=org.id)
+        # Org.send_staff_review_account_reminder(relationship_id=org.id)
 
     @staticmethod
     @user_context
@@ -866,7 +866,7 @@ class Org:  # pylint: disable=too-many-public-methods
             'userLastName': last_name
         }
         try:
-            publish_to_mailer(QueueMessageTypes.STAFF_REVIEW_ACCOUNT.value, data=data)
+            # publish_to_mailer(QueueMessageTypes.STAFF_REVIEW_ACCOUNT.value, data=data)
             current_app.logger.debug('<send_staff_review_account_reminder')
         except Exception as e:  # noqa=B901
             current_app.logger.error('<send_staff_review_account_reminder failed')
