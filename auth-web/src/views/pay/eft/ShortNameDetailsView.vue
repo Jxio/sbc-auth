@@ -18,7 +18,31 @@
       <p class="mt-3 mb-0">
         Review and verify short name details
       </p>
+      <v-alert
+        class="mt-3 mb-0 alert-item account-alert-inner"
+        :icon="false"
+        prominent
+        outlined
+        type="warning"
+      >
+        <div class="account-alert-inner mb-0">
+          <v-icon
+            medium
+          >
+            mdi-alert
+          </v-icon>
+          <p class="account-alert__info mb-0 pl-3">
+            Please verify if the {{ unsettledAmount }} balance is eligible for a refund, or you can link to a new account.
+          </p>
+        </div>
+      </v-alert>
     </div>
+
+    <ShortNameRefund
+      :shortNameDetails="shortNameDetails"
+      :unsettledAmount="unsettledAmount"
+      class="mb-12"
+    />
 
     <ShortNameAccountLinkage
       class="mb-12"
@@ -37,11 +61,12 @@ import { PropType, computed, defineComponent, onMounted, reactive, toRefs } from
 import CommonUtils from '@/util/common-util'
 import PaymentService from '@/services/payment.services'
 import ShortNameAccountLinkage from '@/components/pay/eft/ShortNameAccountLink.vue'
+import ShortNameRefund from '@/components/pay/eft/ShortNameRefund.vue'
 import ShortNameTransactions from '@/components/pay/eft/ShortNameTransactions.vue'
 
 export default defineComponent({
   name: 'ShortNameMappingView',
-  components: { ShortNameAccountLinkage, ShortNameTransactions },
+  components: { ShortNameAccountLinkage, ShortNameTransactions, ShortNameRefund },
   props: {
     shortNameId: {
       type: String as PropType<string>,
@@ -53,7 +78,8 @@ export default defineComponent({
       shortNameDetails: {},
       highlightIndex: -1,
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      unsettledAmount: ''
     })
 
     onMounted(async () => {
@@ -62,9 +88,9 @@ export default defineComponent({
 
     const unsettledAmountHeader = computed<string>(() => {
       const details = state.shortNameDetails
-      const unsettledAmount = details.creditsRemaining !== undefined
+      state.unsettledAmount = details.creditsRemaining !== undefined
         ? CommonUtils.formatAmount(details.creditsRemaining) : ''
-      return `Unsettled Amount for ${details.shortName}: ${unsettledAmount}`
+      return `Unsettled Amount for ${details.shortName}: ${state.unsettledAmount}`
     })
 
     async function onLinkAccount () {
@@ -103,6 +129,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '$assets/scss/theme.scss';
-
+@import '@/assets/scss/theme.scss';
+  .account-alert-inner {
+    .v-icon {
+      color: $app-alert-orange;
+    }
+    background-color: $BCgovGold0 !important;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .account-alert__info {
+    flex: 1 1 auto;
+  }
 </style>
