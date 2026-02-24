@@ -27,6 +27,9 @@ on:
 
 jobs:
   auth-api-cd:
+    permissions:
+      id-token: write
+      contents: read
     uses: bcgov/bcregistry-sre/.github/workflows/backend-cd.yaml@main
     with:
       target: ${{ inputs.target }}
