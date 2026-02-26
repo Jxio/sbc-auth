@@ -39,6 +39,8 @@ from account_mailer.enums import Constants, SubjectType, TemplateType, TitleType
 from account_mailer.services import google_store, notification_service
 from account_mailer.utils import format_currency, format_day_with_suffix, get_local_formatted_date
 
+from src.account_mailer.enums import LoginTypes
+
 AFFILIATION_INVITATION_UNAFFILIATED_EMAIL = "bc.registry.auth.affiliationInvitationUnaffiliatedEmail"
 
 bp = Blueprint("worker", __name__)
@@ -557,6 +559,7 @@ def handle_other_messages(message_type, email_msg):
         "business_name": email_msg.get("businessName"),
         "business_identifier": email_msg.get("businessIdentifier"),
         "expiry_text": email_msg.get("expiryText"),
+        "login_type": LoginTypes[email_msg.get("loginType")].value if email_msg.get("loginType") else None,
     }
 
     org_id = email_msg.get("accountId")

@@ -24,6 +24,9 @@ from http import HTTPStatus
 from unittest.mock import patch
 
 import pytest
+from sbc_common_components.utils.enums import QueueMessageTypes
+
+import auth_api.utils.account_mailer
 import pytz
 from faker import Faker
 
@@ -77,6 +80,8 @@ from tests.utilities.factory_utils import (
     factory_user_model,
     patch_pay_account_delete,
     patch_pay_account_delete_error,
+    patch_pay_account_post,
+    patch_pay_account_put,
 )
 
 FAKE = Faker()
@@ -656,6 +661,30 @@ def test_add_org_invalid_returns_exception(client, jwt, session):  # pylint:disa
         )
         assert rv.status_code == 400
         assert schema_utils.validate(rv.json, "exception")[0]
+
+
+@patch.object(auth_api.utils.account_mailer, "publish_to_mailer")
+def test_add_org_sends_account_created_notification(mock_mailer, client, jwt, session, keycloak_mock, monkeypatch):  # pylint:disable=unused-argument
+    """Assert that POST org with mailing address email sends account created notification."""
+    patch_pay_account_post(monkeypatch)
+    patch_pay_account_put(monkeypatch)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_user_role)
+    client.post("/api/v1/users", headers=headers, content_type="application/json")
+
+    org_data = {
+        **TestOrgInfo.org1,
+        "mailingAddress": {**TestOrgInfo.get_mailing_address(), "email": "foo@bar.com"},
+    }
+    rv = client.post(
+        "/api/v1/orgs", data=json.dumps(org_data), headers=headers, content_type="application/json"
+    )
+    assert rv.status_code == HTTPStatus.CREATED
+    mock_mailer.assert_called_once()
+    call_args = mock_mailer.call_args
+    assert call_args[0][0] == QueueMessageTypes.ACCOUNT_CREATED_NOTIFICATION.value
+    assert call_args[1]["data"]["emailAddresses"] == "foo@bar.com"
+    assert "accountId" in call_args[1]["data"]
+    assert "orgName" in call_args[1]["data"]
 
 
 def test_get_org(client, jwt, session, keycloak_mock):  # pylint:disable=unused-argument
