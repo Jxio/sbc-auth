@@ -35,7 +35,7 @@ from account_mailer.email_processors import (
     product_confirmation,
     refund_requested,
 )
-from account_mailer.enums import Constants, SubjectType, TemplateType, TitleType, LoginTypes
+from account_mailer.enums import Constants, LoginTypes, SubjectType, TemplateType, TitleType
 from account_mailer.services import google_store, notification_service
 from account_mailer.utils import format_currency, format_day_with_suffix, get_local_formatted_date
 
