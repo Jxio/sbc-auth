@@ -24,12 +24,11 @@ from http import HTTPStatus
 from unittest.mock import patch
 
 import pytest
+import pytz
+from faker import Faker
 from sbc_common_components.utils.enums import QueueMessageTypes
 
 import auth_api.utils.account_mailer
-import pytz
-from faker import Faker
-
 from auth_api.exceptions import BusinessException
 from auth_api.exceptions.errors import Error
 from auth_api.models import Affidavit as AffidavitModel
