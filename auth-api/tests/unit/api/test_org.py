@@ -662,27 +662,31 @@ def test_add_org_invalid_returns_exception(client, jwt, session):  # pylint:disa
         assert schema_utils.validate(rv.json, "exception")[0]
 
 
+@pytest.mark.parametrize(
+    "route,org_data_factory",
+    [
+        ("/api/v1/orgs", lambda: TestOrgInfo.org1),
+        ("/api/v2/orgs", lambda: {**TestOrgInfo.org1, "contact": TestContactInfo.contact1}),
+    ],
+)
 @patch.object(auth_api.utils.account_mailer, "publish_to_mailer")
-def test_add_org_sends_account_created_notification(mock_mailer, client, jwt, session, keycloak_mock, monkeypatch):  # pylint:disable=unused-argument
-    """Assert that POST org with mailing address email sends account created notification."""
+def test_add_org_sends_account_created_notification(
+    mock_mailer, client, jwt, session, keycloak_mock, monkeypatch, route, org_data_factory
+):  # pylint:disable=unused-argument
+    """Assert that POST org (V1 and V2) sends account created notification."""
     patch_pay_account_post(monkeypatch)
     patch_pay_account_put(monkeypatch)
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_user_role)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_bceid_user)
     client.post("/api/v1/users", headers=headers, content_type="application/json")
 
-    org_data = {
-        **TestOrgInfo.org1,
-        "mailingAddress": {**TestOrgInfo.get_mailing_address(), "email": "foo@bar.com"},
-    }
-    rv = client.post(
-        "/api/v1/orgs", data=json.dumps(org_data), headers=headers, content_type="application/json"
-    )
+    org_data = org_data_factory()
+    rv = client.post(route, data=json.dumps(org_data), headers=headers, content_type="application/json")
     assert rv.status_code == HTTPStatus.CREATED
     mock_mailer.assert_called_once()
     call_args = mock_mailer.call_args
     assert call_args[0][0] == QueueMessageTypes.ACCOUNT_CREATED_NOTIFICATION.value
-    assert call_args[1]["data"]["emailAddresses"] == "foo@bar.com"
-    assert "accountId" in call_args[1]["data"]
+    assert call_args[1]["data"]["emailAddresses"]
+    assert call_args[1]["data"]["accountId"] == rv.json["id"]
     assert "orgName" in call_args[1]["data"]
 
 

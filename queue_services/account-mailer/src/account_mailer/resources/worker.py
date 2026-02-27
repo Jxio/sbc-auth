@@ -557,7 +557,7 @@ def handle_other_messages(message_type, email_msg):
         "business_name": email_msg.get("businessName"),
         "business_identifier": email_msg.get("businessIdentifier"),
         "expiry_text": email_msg.get("expiryText"),
-        "login_type": LoginTypes[email_msg.get("loginType")].value if email_msg.get("loginType") else None,
+        "login_source": LoginTypes.get_value(email_msg.get("loginSource")),
     }
 
     org_id = email_msg.get("accountId")

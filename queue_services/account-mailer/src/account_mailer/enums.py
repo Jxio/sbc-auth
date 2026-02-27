@@ -52,16 +52,16 @@ class SubjectType(Enum):
     )
     NON_BCSC_ORG_APPROVED_NOTIFICATION = "Welcome to BC Registries and Online Services"
     NON_BCSC_ORG_REJECTED_NOTIFICATION = (
-        "[BC Registries and Online Services] YOUR ACTION REQUIRED: Business Registry Account cannot be approved"
+        "Account Creation Declined"
     )
     OTP_AUTHENTICATOR_RESET_NOTIFICATION = "[BC Registries and Online Services] Authenticator Has Been Reset"
     ROLE_CHANGED_NOTIFICATION = "[BC Registries and Online Services] Your Role Has Been Changed"
     STAFF_REVIEW_ACCOUNT = "[BC Registries and Online Services] An out of province account needs to be approved."
     GOVM_APPROVED_NOTIFICATION = "Welcome to BC Registries and Online Services"
-    ACCOUNT_CREATED_NOTIFICATION = "Welcome to BC Registries and Online Services"
     GOVM_REJECTED_NOTIFICATION = (
-        "[BC Registries and Online Services] Your BC Registries Account {account_name} Has Been Rejected"
+        "Account Creation Declined"
     )
+    ACCOUNT_CREATED_NOTIFICATION = "Welcome to BC Registries and Online Services"
     PROD_PACKAGE_APPROVED_NOTIFICATION = (
         "[BC Registries and Online Services] Your Product Request {product_name} Has Been Approved"
     )
@@ -109,13 +109,13 @@ class TitleType(Enum):
     MEMBERSHIP_APPROVED_NOTIFICATION = "Your BC Registries and Online Services account has been approved."
     MEMBERSHIP_APPROVED_NOTIFICATION_FOR_BCEID = "Your BC Registries and Online Services account has been approved."
     NON_BCSC_ORG_APPROVED_NOTIFICATION = "Your BC Registries and Online Services account has been approved."
-    NON_BCSC_ORG_REJECTED_NOTIFICATION = "Your Membership Has Been Rejected"
+    NON_BCSC_ORG_REJECTED_NOTIFICATION = "Your BC Registries and Online Services account has been declined."
     ACCOUNT_CREATED_NOTIFICATION = "Your BC Registries and Online Services account has been approved"
     OTP_AUTHENTICATOR_RESET_NOTIFICATION = "Your Authenticator Has Been Reset"
     ROLE_CHANGED_NOTIFICATION = "Your Role Has Been Changed"
     STAFF_REVIEW_ACCOUNT = "Notification from Business Registry"
     GOVM_APPROVED_NOTIFICATION = "Your BC Registries and Online Services account has been approved."
-    GOVM_REJECTED_NOTIFICATION = "Your BC Registries Account Has Been Rejected"
+    GOVM_REJECTED_NOTIFICATION = "Your BC Registries and Online Services account has been declined."
     PROD_PACKAGE_APPROVED_NOTIFICATION = "Your Product Request Has Been Approved"
     PROD_PACKAGE_REJECTED_NOTIFICATION = "Your Product Request Has Been Rejected"
     PRODUCT_APPROVED_NOTIFICATION_DETAILED = "Your Product Request Has Been Approved"
@@ -194,4 +194,8 @@ class LoginTypes(Enum):
     IDIR = "IDIR"
     BCEID = "BCeID"
     BCSC = "BC Services Card"
-    BCROS = "BCROS"
+
+    
+    @classmethod
+    def get_value(cls, key: str) -> str:
+        return cls[key].value if key in cls.__members__ else ""
