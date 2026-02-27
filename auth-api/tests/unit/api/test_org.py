@@ -864,14 +864,15 @@ def test_add_org_invalid_returns_exception(client, jwt, session):  # pylint:disa
         ("/api/v2/orgs", lambda: {**TestOrgInfo.org_govm, "contact": TestContactInfo.contact1}),
     ],
 )
+@patch.object(UserService, "get_admin_emails_for_org", return_value="test@test.com")
 @patch.object(auth_api.services.org, "publish_to_mailer")
 def test_add_org_sends_account_created_notification(
-    mock_mailer, client, jwt, session, keycloak_mock, monkeypatch, route, org_data_factory
+    mock_mailer, _mock_admin_emails, client, jwt, session, keycloak_mock, monkeypatch, route, org_data_factory
 ):  # pylint:disable=unused-argument
     """Assert that POST org (V1 and V2) sends account created notification."""
     patch_pay_account_post(monkeypatch)
     patch_pay_account_put(monkeypatch)
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_bceid_user)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     client.post("/api/v1/users", headers=headers, content_type="application/json")
 
     org_data = org_data_factory()
