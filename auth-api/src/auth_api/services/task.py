@@ -121,7 +121,7 @@ class Task:  # pylint: disable=too-many-instance-attributes
             org_id = task_model.relationship_id
             if not is_hold:
                 self._update_org(
-                    is_approved=is_approved, org_id=org_id, task_action=task_model.action, user=user
+                    is_approved=is_approved, org_id=org_id, task_action=task_model.action
                 )
             else:
                 # Task with ACCOUNT_REVIEW action cannot be put on hold

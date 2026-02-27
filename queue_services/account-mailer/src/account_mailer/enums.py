@@ -195,7 +195,8 @@ class LoginTypes(Enum):
     BCEID = "BCeID"
     BCSC = "BC Services Card"
 
-    
+
     @classmethod
     def get_value(cls, key: str) -> str:
+        """Get the value of the enum."""
         return cls[key].value if key in cls.__members__ else ""
