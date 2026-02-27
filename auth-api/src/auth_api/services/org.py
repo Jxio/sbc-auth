@@ -980,13 +980,13 @@ class Org:  # pylint: disable=too-many-public-methods
         return Org(org_model)
 
     @staticmethod
-    def approve_or_reject(org_id: int, is_approved: bool, task_action: str = None):
+    def approve_or_reject(org_id: int, is_approved: bool, client_id: int, task_action: str = None):
         """Mark the affidavit as approved or rejected."""
         current_app.logger.debug("<find_affidavit_by_org_id ")
         # Get the org and check what's the current status
         org: OrgModel = OrgModel.find_by_org_id(org_id)
 
-        # Current User
+        # Current User - usually staff admin
         user: UserModel = UserModel.find_by_jwt_token()
 
         if task_action == TaskAction.AFFIDAVIT_REVIEW.value:
@@ -1007,10 +1007,10 @@ class Org:  # pylint: disable=too-many-public-methods
         admin_emails = UserService.get_admin_emails_for_org(org_id)
         if admin_emails != "":
             if org.access_type in (AccessType.EXTRA_PROVINCIAL.value, AccessType.REGULAR_BCEID.value):
-                Org.send_approved_rejected_notification(admin_emails, org.name, org.id, org.status_code, user)
+                Org.send_approved_rejected_notification(admin_emails, org.name, org.id, org.status_code, client_id)
             elif org.access_type in (AccessType.GOVM.value, AccessType.GOVN.value):
                 Org.send_approved_rejected_govm_govn_notification(
-                    admin_emails, org.name, org.id, org.status_code, user
+                    admin_emails, org.name, org.id, org.status_code, client_id
                 )
         else:
             # continue but log error
@@ -1051,7 +1051,7 @@ class Org:  # pylint: disable=too-many-public-methods
             raise BusinessException(Error.FAILED_NOTIFICATION, None) from e
 
     @staticmethod
-    def send_approved_rejected_notification(receipt_admin_emails, org_name, org_id, org_status: OrgStatus, user: UserModel = None):
+    def send_approved_rejected_notification(receipt_admin_emails, org_name, org_id, org_status: OrgStatus, client_id: int):
         """Send Approved/Rejected notification to the user."""
         current_app.logger.debug("<send_approved_rejected_notification")
 
@@ -1062,12 +1062,13 @@ class Org:  # pylint: disable=too-many-public-methods
         else:
             return  # Don't send mail for any other status change
         app_url = current_app.config.get("WEB_APP_URL")
+        client: UserModel = UserModel.find_by_id(client_id)
         data = {
             "accountId": org_id,
             "emailAddresses": receipt_admin_emails,
             "contextUrl": app_url,
             "orgName": org_name,
-            "loginSource": user.login_source
+            "loginSource": client.login_source
         }
         try:
             publish_to_mailer(notification_type, data=data)
@@ -1078,7 +1079,7 @@ class Org:  # pylint: disable=too-many-public-methods
 
     @staticmethod
     def send_approved_rejected_govm_govn_notification(
-        receipt_admin_email, org_name, org_id, org_status: OrgStatus, origin_url, user: UserModel
+        receipt_admin_email, org_name, org_id, org_status: OrgStatus, origin_url, client_id: int = None
     ):
         """Send Approved govm notification to the user."""
         current_app.logger.debug("<send_approved_rejected_govm_govn_notification")
@@ -1090,7 +1091,8 @@ class Org:  # pylint: disable=too-many-public-methods
         else:
             return  # Don't send mail for any other status change
         app_url = f"{origin_url}/"
-        data = {"accountId": org_id, "emailAddresses": receipt_admin_email, "contextUrl": app_url, "orgName": org_name, "loginSource": user.login_source}
+        client: UserModel = UserModel.find_by_id(client_id)
+        data = {"accountId": org_id, "emailAddresses": receipt_admin_email, "contextUrl": app_url, "orgName": org_name, "loginSource": client.login_source}
         try:
             publish_to_mailer(notification_type, data=data)
             current_app.logger.debug("send_approved_rejected_govm_govn_notification>")

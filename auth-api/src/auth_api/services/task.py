@@ -119,9 +119,10 @@ class Task:  # pylint: disable=too-many-instance-attributes
         if task_model.relationship_type == TaskRelationshipType.ORG.value:
             # Update Org relationship
             org_id = task_model.relationship_id
+
             if not is_hold:
                 self._update_org(
-                    is_approved=is_approved, org_id=org_id, task_action=task_model.action
+                    is_approved=is_approved, org_id=org_id, client_id=task_model.created_by_id, task_action=task_model.action
                 )
             else:
                 # Task with ACCOUNT_REVIEW action cannot be put on hold
@@ -223,14 +224,14 @@ class Task:  # pylint: disable=too-many-instance-attributes
             raise BusinessException(Error.FAILED_NOTIFICATION, None) from e
 
     @staticmethod
-    def _update_org(is_approved: bool, org_id: int, task_action: str = None):
+    def _update_org(is_approved: bool, org_id: int, client_id: int, task_action: str = None):
         """Approve/Reject Affidavit and Org."""
         from auth_api.services import Org as OrgService  # pylint:disable=cyclic-import, import-outside-toplevel
 
         current_app.logger.debug("<update_task_org ")
 
         OrgService.approve_or_reject(
-            org_id=org_id, is_approved=is_approved, task_action=task_action
+            org_id=org_id, is_approved=is_approved, client_id=client_id, task_action=task_action
         )
 
         current_app.logger.debug(">update_task_org ")
