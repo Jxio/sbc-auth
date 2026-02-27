@@ -1079,7 +1079,7 @@ class Org:  # pylint: disable=too-many-public-methods
 
     @staticmethod
     def send_approved_rejected_govm_govn_notification(
-        receipt_admin_email, org_name, org_id, org_status: OrgStatus, origin_url, client_id: int = None
+        receipt_admin_email, org_name, org_id, org_status: OrgStatus, origin_url, client_id: int
     ):
         """Send Approved govm notification to the user."""
         current_app.logger.debug("<send_approved_rejected_govm_govn_notification")
