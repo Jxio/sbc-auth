@@ -206,9 +206,9 @@ class Org:  # pylint: disable=too-many-public-methods
     def _send_account_created_notification(org: OrgModel, user: UserModel):
         """Send account created notification to the user."""
         current_app.logger.debug("<_send_account_created_notification")
-        app_url = current_app.config.get('WEB_APP_URL')
+        app_url = current_app.config.get("WEB_APP_URL")
         recipients = UserService.get_admin_emails_for_org(org.id)
-        login_source = user.login_source
+        login_source = user.login_source if user else None
         if not recipients:
             current_app.logger.warning(f"No recipient found for org {org.id}")
             return
@@ -980,7 +980,7 @@ class Org:  # pylint: disable=too-many-public-methods
         return Org(org_model)
 
     @staticmethod
-    def approve_or_reject(org_id: int, is_approved: bool, origin_url: str = None, task_action: str = None):
+    def approve_or_reject(org_id: int, is_approved: bool, task_action: str = None):
         """Mark the affidavit as approved or rejected."""
         current_app.logger.debug("<find_affidavit_by_org_id ")
         # Get the org and check what's the current status
@@ -1061,7 +1061,7 @@ class Org:  # pylint: disable=too-many-public-methods
             notification_type = QueueMessageTypes.NON_BCSC_ORG_REJECTED_NOTIFICATION.value
         else:
             return  # Don't send mail for any other status change
-        app_url = current_app.config.get('WEB_APP_URL')
+        app_url = current_app.config.get("WEB_APP_URL")
         data = {
             "accountId": org_id,
             "emailAddresses": receipt_admin_emails,
