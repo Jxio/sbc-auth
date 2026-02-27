@@ -860,11 +860,11 @@ def test_add_org_invalid_returns_exception(client, jwt, session):  # pylint:disa
 @pytest.mark.parametrize(
     "route,org_data_factory",
     [
-        ("/api/v1/orgs", lambda: TestOrgInfo.org1),
-        ("/api/v2/orgs", lambda: {**TestOrgInfo.org1, "contact": TestContactInfo.contact1}),
+        ("/api/v1/orgs", lambda: TestOrgInfo.org_govm),  # GOVM: is_staff_review_needed=False
+        ("/api/v2/orgs", lambda: {**TestOrgInfo.org_govm, "contact": TestContactInfo.contact1}),
     ],
 )
-@patch.object(auth_api.utils.account_mailer, "publish_to_mailer")
+@patch.object(auth_api.services.org, "publish_to_mailer")
 def test_add_org_sends_account_created_notification(
     mock_mailer, client, jwt, session, keycloak_mock, monkeypatch, route, org_data_factory
 ):  # pylint:disable=unused-argument

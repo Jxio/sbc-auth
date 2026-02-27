@@ -208,7 +208,7 @@ class Org:  # pylint: disable=too-many-public-methods
         current_app.logger.debug("<_send_account_created_notification")
         app_url = current_app.config.get("WEB_APP_URL")
         recipients = UserService.get_admin_emails_for_org(org.id)
-        login_source = user.login_source if user else None
+        login_source = user.login_source
         if not recipients:
             current_app.logger.warning(f"No recipient found for org {org.id}")
             return
