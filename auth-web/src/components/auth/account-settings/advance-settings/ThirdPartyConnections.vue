@@ -1,39 +1,39 @@
 <template>
   <v-container class="vendor-connections-container">
-    <div class="view-header flex-column mb-3">
+<div class="view-header flex-column mb-3">
       <h2
         class="view-header__title"
         data-test="vendor-connections-title"
       >
-        {{ $t('vendorConnectionsTitle') }}
+        {{ $t('thirdPartyConnectionsTitle') }}
       </h2>
       <p class="mt-3 payment-page-sub">
-        {{ $t('vendorConnectionsSubtitle') }}
+        {{ $t('thirdPartyConnectionsSubtitle') }}
       </p>
     </div>
-    <VendorConnectionsTable />
+    <ThirdPartyConnectionsTable />
   </v-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted } from '@vue/composition-api'
 import { Pages } from '@/util/constants'
-import VendorConnectionsTable from '@/components/auth/account-settings/advance-settings/VendorConnectionsTable.vue'
-import { canViewVendorConnections } from '@/util/vendor-connection-util'
+import ThirdPartyConnectionsTable from '@/components/auth/account-settings/advance-settings/ThirdPartyConnectionsTable.vue'
+import { canViewThirdPartyConnections } from '@/util/third-party-connection-util'
 import { useOrgStore } from '@/stores/org'
 import { useUserStore } from '@/stores/user'
 
 export default defineComponent({
-  name: 'VendorConnections',
+  name: 'ThirdPartyConnections',
   components: {
-    VendorConnectionsTable
+    ThirdPartyConnectionsTable
   },
   setup (_, { root }) {
     const orgStore = useOrgStore()
     const userStore = useUserStore()
 
     onMounted(() => {
-      if (!canViewVendorConnections(
+      if (!canViewThirdPartyConnections(
         orgStore.currentMembership?.membershipTypeCode,
         userStore.currentUser?.roles
       )) {

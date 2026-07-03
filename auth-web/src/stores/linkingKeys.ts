@@ -2,7 +2,7 @@ import {
   AccountLinkingKey,
   AccountLinkingKeysResponse,
   LinkingKeyActionDetails
-} from '@/models/vendorConnection'
+} from '@/models/thirdPartyConnection'
 import LinkingKeysService from '@/services/linkingKeys.services'
 import { defineStore } from 'pinia'
 

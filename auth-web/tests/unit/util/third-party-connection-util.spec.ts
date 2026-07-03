@@ -1,40 +1,40 @@
 import { LDFlags, Role } from '@/util/constants'
 import {
-  canManageVendorConnections,
-  canViewVendorConnections,
+  canManageThirdPartyConnections,
+  canViewThirdPartyConnections,
   getVendorConnectionStatus,
   mapLinkingKeyToVendorConnection,
   showsStandaloneRemoveAction
-} from '@/util/vendor-connection-util'
+} from '@/util/third-party-connection-util'
 import LaunchDarklyService from 'sbc-common-components/src/services/launchdarkly.services'
 import { MembershipType } from '@/models/Organization'
-import { VendorConnectionStatuses } from '@/models/vendorConnection'
+import { VendorConnectionStatuses } from '@/models/thirdPartyConnection'
 import moment from 'moment'
 
-describe('vendor-connection-util', () => {
+describe('third-party-connection-util', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
 
-  describe('canViewVendorConnections', () => {
+  describe('canViewThirdPartyConnections', () => {
     it('returns false when disable-account-linking flag is on', () => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(true)
 
-      expect(canViewVendorConnections(MembershipType.Admin, [Role.AccountHolder])).toBe(false)
+      expect(canViewThirdPartyConnections(MembershipType.Admin, [Role.AccountHolder])).toBe(false)
       expect(LaunchDarklyService.getFlag).toHaveBeenCalledWith(LDFlags.DisableAccountLinking, true)
     })
 
     it('returns false without account_holder or manage_accounts JWT role', () => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(false)
 
-      expect(canViewVendorConnections(MembershipType.Admin, [])).toBe(false)
-      expect(canViewVendorConnections(MembershipType.Admin, [Role.Staff])).toBe(false)
+      expect(canViewThirdPartyConnections(MembershipType.Admin, [])).toBe(false)
+      expect(canViewThirdPartyConnections(MembershipType.Admin, [Role.Staff])).toBe(false)
     })
 
     it('returns true for Admin with account_holder role', () => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(false)
 
-      expect(canViewVendorConnections(
+      expect(canViewThirdPartyConnections(
         MembershipType.Admin,
         [Role.AccountHolder]
       )).toBe(true)
@@ -43,7 +43,7 @@ describe('vendor-connection-util', () => {
     it('returns true for Coordinator with account_holder role', () => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(false)
 
-      expect(canViewVendorConnections(
+      expect(canViewThirdPartyConnections(
         MembershipType.Coordinator,
         [Role.AccountHolder]
       )).toBe(true)
@@ -52,7 +52,7 @@ describe('vendor-connection-util', () => {
     it('returns true for regular User with account_holder role', () => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(false)
 
-      expect(canViewVendorConnections(
+      expect(canViewThirdPartyConnections(
         MembershipType.User,
         [Role.AccountHolder]
       )).toBe(true)
@@ -61,7 +61,7 @@ describe('vendor-connection-util', () => {
     it('returns true for staff with manage_accounts role', () => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(false)
 
-      expect(canViewVendorConnections(
+      expect(canViewThirdPartyConnections(
         undefined,
         [Role.Staff, Role.StaffManageAccounts]
       )).toBe(true)
@@ -70,48 +70,48 @@ describe('vendor-connection-util', () => {
     it('returns true for external staff with manage_accounts role', () => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(false)
 
-      expect(canViewVendorConnections(
+      expect(canViewThirdPartyConnections(
         undefined,
         [Role.ExternalStaffReadonly, Role.StaffManageAccounts]
       )).toBe(true)
     })
   })
 
-  describe('canManageVendorConnections', () => {
+  describe('canManageThirdPartyConnections', () => {
     beforeEach(() => {
       vi.spyOn(LaunchDarklyService, 'getFlag').mockReturnValue(false)
     })
 
     it('returns true for Admin with account_holder role', () => {
-      expect(canManageVendorConnections(
+      expect(canManageThirdPartyConnections(
         MembershipType.Admin,
         [Role.AccountHolder]
       )).toBe(true)
     })
 
     it('returns true for Coordinator with account_holder role', () => {
-      expect(canManageVendorConnections(
+      expect(canManageThirdPartyConnections(
         MembershipType.Coordinator,
         [Role.AccountHolder]
       )).toBe(true)
     })
 
     it('returns false for regular User even with account_holder role', () => {
-      expect(canManageVendorConnections(
+      expect(canManageThirdPartyConnections(
         MembershipType.User,
         [Role.AccountHolder]
       )).toBe(false)
     })
 
     it('returns true for staff with manage_accounts role', () => {
-      expect(canManageVendorConnections(
+      expect(canManageThirdPartyConnections(
         undefined,
         [Role.Staff, Role.StaffManageAccounts]
       )).toBe(true)
     })
 
     it('returns true for external staff readonly with manage_accounts role', () => {
-      expect(canManageVendorConnections(
+      expect(canManageThirdPartyConnections(
         undefined,
         [Role.ExternalStaffReadonly, Role.StaffManageAccounts]
       )).toBe(true)

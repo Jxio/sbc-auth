@@ -5,8 +5,8 @@ import { EventBus } from '@/event-bus'
 import LinkingKeysService from '@/services/linkingKeys.services'
 import { MembershipType } from '@/models/Organization'
 import { Role } from '@/util/constants'
-import { VendorConnectionStatuses } from '@/models/vendorConnection'
-import VendorConnectionsTable from '@/components/auth/account-settings/advance-settings/VendorConnectionsTable.vue'
+import { VendorConnectionStatuses } from '@/models/thirdPartyConnection'
+import ThirdPartyConnectionsTable from '@/components/auth/account-settings/advance-settings/ThirdPartyConnectionsTable.vue'
 import VueRouter from 'vue-router'
 import Vuetify from 'vuetify'
 import { createI18n } from 'vue-i18n-composable'
@@ -56,7 +56,7 @@ function getMockLinkingKeysResponse () {
   }
 }
 
-describe('VendorConnectionsTable.vue', () => {
+describe('ThirdPartyConnectionsTable.vue', () => {
   let wrapper: any
 
   beforeEach(async () => {
@@ -85,32 +85,32 @@ describe('VendorConnectionsTable.vue', () => {
       locale: 'en',
       messages: {
         en: {
-          vendorConnectionsEmpty: 'No connected service provider.',
-          vendorConnectionsExpiresInDays: 'EXPIRES IN {days} DAYS',
-          vendorConnectionsExpired: 'EXPIRED',
-          vendorConnectionsPending: 'PENDING',
-          vendorConnectionsPendingProviderName: 'Pending vendor connection',
-          vendorConnectionsRemoveTitle: 'Caution: Remove Connection',
-          vendorConnectionsRemoveBody: 'Remove body',
-          vendorConnectionsExtendTitle: 'Extend Service Provider Connection',
-          vendorConnectionsExtendBody: 'Extend body',
-          vendorConnectionsRemovedToast: '{providerName} connection removed.',
-          vendorConnectionsExtendedToast: '{providerName} connection extended.',
-          vendorConnectionsRemoveFailedToast: 'Unable to remove {providerName} connection. Please try again.',
-          vendorConnectionsExtendFailedToast: 'Unable to extend {providerName} connection. Please try again.',
-          vendorConnectionsRemove: 'Remove',
-          vendorConnectionsExtend: 'Extend',
-          vendorConnectionsCancel: 'Cancel',
-          vendorConnectionsRemoveConnection: 'Remove Connection',
-          vendorConnectionsExtendConnection: 'Extend Connection',
-          vendorConnectionsRemoveAria: 'Remove connection',
-          vendorConnectionsExtendAria: 'Extend connection',
-          vendorConnectionsMoreActionsAria: 'More actions'
+          thirdPartyConnectionsEmpty: 'No connected service provider.',
+          thirdPartyConnectionsExpiresInDays: 'EXPIRES IN {days} DAYS',
+          thirdPartyConnectionsExpired: 'EXPIRED',
+          thirdPartyConnectionsPending: 'PENDING',
+          thirdPartyConnectionsPendingProviderName: 'Pending vendor connection',
+          thirdPartyConnectionsRemoveTitle: 'Caution: Remove Connection',
+          thirdPartyConnectionsRemoveBody: 'Remove body',
+          thirdPartyConnectionsExtendTitle: 'Extend Service Provider Connection',
+          thirdPartyConnectionsExtendBody: 'Extend body',
+          thirdPartyConnectionsRemovedToast: '{providerName} connection removed.',
+          thirdPartyConnectionsExtendedToast: '{providerName} connection extended.',
+          thirdPartyConnectionsRemoveFailedToast: 'Unable to remove {providerName} connection. Please try again.',
+          thirdPartyConnectionsExtendFailedToast: 'Unable to extend {providerName} connection. Please try again.',
+          thirdPartyConnectionsRemove: 'Remove',
+          thirdPartyConnectionsExtend: 'Extend',
+          thirdPartyConnectionsCancel: 'Cancel',
+          thirdPartyConnectionsRemoveConnection: 'Remove Connection',
+          thirdPartyConnectionsExtendConnection: 'Extend Connection',
+          thirdPartyConnectionsRemoveAria: 'Remove connection',
+          thirdPartyConnectionsExtendAria: 'Extend connection',
+          thirdPartyConnectionsMoreActionsAria: 'More actions'
         }
       }
     })
 
-    wrapper = shallowMount(VendorConnectionsTable, {
+    wrapper = shallowMount(ThirdPartyConnectionsTable, {
       localVue,
       router,
       vuetify,

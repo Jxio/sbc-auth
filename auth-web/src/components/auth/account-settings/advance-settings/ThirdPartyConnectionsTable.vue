@@ -21,19 +21,19 @@
           v-if="getConnectionStatus(item) === VendorConnectionStatuses.Expiring"
           class="label expiring mt-1 d-inline-block"
         >
-          {{ $t('vendorConnectionsExpiresInDays', { days: getDaysUntilExpiry(item.expiryDate) }) }}
+          {{ $t('thirdPartyConnectionsExpiresInDays', { days: getDaysUntilExpiry(item.expiryDate) }) }}
         </span>
         <span
           v-else-if="getConnectionStatus(item) === VendorConnectionStatuses.Expired"
           class="label expired mt-1 d-inline-block"
         >
-          {{ $t('vendorConnectionsExpired') }}
+          {{ $t('thirdPartyConnectionsExpired') }}
         </span>
         <span
           v-else-if="getConnectionStatus(item) === VendorConnectionStatuses.Pending"
           class="label pending mt-1 d-inline-block"
         >
-          {{ $t('vendorConnectionsPending') }}
+          {{ $t('thirdPartyConnectionsPending') }}
         </span>
       </template>
 
@@ -55,12 +55,12 @@
             color="primary"
             depressed
             class="vendor-connection-action-btn vendor-connection-action-btn--standalone"
-            :aria-label="$t('vendorConnectionsRemoveAria')"
-            :title="$t('vendorConnectionsRemoveAria')"
+            :aria-label="$t('thirdPartyConnectionsRemoveAria')"
+            :title="$t('thirdPartyConnectionsRemoveAria')"
             :data-test="getIndexedTag('remove-button', item.id)"
             @click="openRemoveModal(item)"
           >
-            {{ $t('vendorConnectionsRemove') }}
+            {{ $t('thirdPartyConnectionsRemove') }}
           </v-btn>
 
           <span
@@ -71,12 +71,12 @@
               color="primary"
               depressed
               class="vendor-connection-action-btn vendor-connection-action-btn--split-main"
-              :aria-label="$t('vendorConnectionsExtendAria')"
-              :title="$t('vendorConnectionsExtendAria')"
+              :aria-label="$t('thirdPartyConnectionsExtendAria')"
+              :title="$t('thirdPartyConnectionsExtendAria')"
               :data-test="getIndexedTag('extend-button', item.id)"
               @click="openExtendModal(item)"
             >
-              {{ $t('vendorConnectionsExtend') }}
+              {{ $t('thirdPartyConnectionsExtend') }}
             </v-btn>
             <v-menu
               v-model="actionMenuOpen[item.id]"
@@ -88,8 +88,8 @@
                   color="primary"
                   depressed
                   class="vendor-connection-action-btn vendor-connection-action-btn--split-menu"
-                  :aria-label="$t('vendorConnectionsMoreActionsAria')"
-                  :title="$t('vendorConnectionsMoreActionsAria')"
+                  :aria-label="$t('thirdPartyConnectionsMoreActionsAria')"
+                  :title="$t('thirdPartyConnectionsMoreActionsAria')"
                   v-bind="attrs"
                   :data-test="getIndexedTag('actions-menu', item.id)"
                   v-on="on"
@@ -102,7 +102,7 @@
                   :data-test="getIndexedTag('remove-menu-item', item.id)"
                   @click="openRemoveModal(item)"
                 >
-                  <v-list-item-title>{{ $t('vendorConnectionsRemove') }}</v-list-item-title>
+                  <v-list-item-title>{{ $t('thirdPartyConnectionsRemove') }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -113,8 +113,8 @@
 
     <ModalDialog
       ref="removeDialog"
-      :title="$t('vendorConnectionsRemoveTitle')"
-      :text="$t('vendorConnectionsRemoveBody')"
+      :title="$t('thirdPartyConnectionsRemoveTitle')"
+      :text="$t('thirdPartyConnectionsRemoveBody')"
       :show-icon="false"
       :show-close-icon="true"
       dialog-class="warning-dialog vendor-connection-dialog"
@@ -132,7 +132,7 @@
             data-test="vendor-connections-remove-cancel"
             @click="closeDialog(removeDialog)"
           >
-            {{ $t('vendorConnectionsCancel') }}
+            {{ $t('thirdPartyConnectionsCancel') }}
           </v-btn>
           <v-btn
             large
@@ -141,7 +141,7 @@
             data-test="vendor-connections-remove-confirm"
             @click="confirmRemove()"
           >
-            {{ $t('vendorConnectionsRemoveConnection') }}
+            {{ $t('thirdPartyConnectionsRemoveConnection') }}
           </v-btn>
         </div>
       </template>
@@ -149,8 +149,8 @@
 
     <ModalDialog
       ref="extendDialog"
-      :title="$t('vendorConnectionsExtendTitle')"
-      :text="$t('vendorConnectionsExtendBody')"
+      :title="$t('thirdPartyConnectionsExtendTitle')"
+      :text="$t('thirdPartyConnectionsExtendBody')"
       :show-icon="false"
       :show-close-icon="true"
       dialog-class="warning-dialog vendor-connection-dialog"
@@ -168,7 +168,7 @@
             data-test="vendor-connections-extend-cancel"
             @click="closeDialog(extendDialog)"
           >
-            {{ $t('vendorConnectionsCancel') }}
+            {{ $t('thirdPartyConnectionsCancel') }}
           </v-btn>
           <v-btn
             large
@@ -177,7 +177,7 @@
             data-test="vendor-connections-extend-confirm"
             @click="confirmExtend()"
           >
-            {{ $t('vendorConnectionsExtendConnection') }}
+            {{ $t('thirdPartyConnectionsExtendConnection') }}
           </v-btn>
         </div>
       </template>
@@ -187,14 +187,14 @@
 
 <script lang="ts">
 import { Ref, computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref } from '@vue/composition-api'
-import { VendorConnection, VendorConnectionStatuses } from '@/models/vendorConnection'
+import { VendorConnection, VendorConnectionStatuses } from '@/models/thirdPartyConnection'
 import {
-  canManageVendorConnections,
+  canManageThirdPartyConnections,
   getDaysUntilExpiry,
   getVendorConnectionStatus,
   mapLinkingKeyToVendorConnection,
   showsStandaloneRemoveAction
-} from '@/util/vendor-connection-util'
+} from '@/util/third-party-connection-util'
 import { BaseTableHeaderI } from '@/components/datatable/interfaces'
 import { BaseVDataTable } from '@/components'
 import CommonUtils from '@/util/common-util'
@@ -243,7 +243,7 @@ const TABLE_HEADERS: BaseTableHeaderI[] = [
 ]
 
 export default defineComponent({
-  name: 'VendorConnectionsTable',
+  name: 'ThirdPartyConnectionsTable',
   components: {
     BaseVDataTable,
     ModalDialog
@@ -265,13 +265,13 @@ export default defineComponent({
     const currentMembership = computed(() => orgStore.currentMembership)
 
     const canManageConnections = computed(() => {
-      return canManageVendorConnections(
+      return canManageThirdPartyConnections(
         currentMembership.value?.membershipTypeCode,
         userStore.currentUser?.roles
       )
     })
 
-    const noDataText = computed(() => t('vendorConnectionsEmpty'))
+    const noDataText = computed(() => t('thirdPartyConnectionsEmpty'))
 
     const loadConnections = async () => {
       isLoading.value = true
@@ -302,7 +302,7 @@ export default defineComponent({
     }
 
     const getServiceProviderDisplayName = (connection: VendorConnection) => {
-      return connection.serviceProviderName || t('vendorConnectionsPendingProviderName')
+      return connection.serviceProviderName || t('thirdPartyConnectionsPendingProviderName')
     }
 
     const formatDateAdded = (dateAdded: string): string => {
@@ -343,13 +343,13 @@ export default defineComponent({
         await loadConnections()
 
         EventBus.$emit('show-toast', {
-          message: t('vendorConnectionsRemovedToast', { providerName }),
+          message: t('thirdPartyConnectionsRemovedToast', { providerName }),
           type: 'primary',
           timeout: 3000
         })
       } catch {
         EventBus.$emit('show-toast', {
-          message: t('vendorConnectionsRemoveFailedToast', { providerName }),
+          message: t('thirdPartyConnectionsRemoveFailedToast', { providerName }),
           type: 'error',
           timeout: 3000
         })
@@ -380,13 +380,13 @@ export default defineComponent({
         await loadConnections()
 
         EventBus.$emit('show-toast', {
-          message: t('vendorConnectionsExtendedToast', { providerName }),
+          message: t('thirdPartyConnectionsExtendedToast', { providerName }),
           type: 'primary',
           timeout: 3000
         })
       } catch {
         EventBus.$emit('show-toast', {
-          message: t('vendorConnectionsExtendFailedToast', { providerName }),
+          message: t('thirdPartyConnectionsExtendFailedToast', { providerName }),
           type: 'error',
           timeout: 3000
         })

@@ -4,8 +4,8 @@ import { createPinia, setActivePinia } from 'pinia'
 import LaunchDarklyService from 'sbc-common-components/src/services/launchdarkly.services'
 import { MembershipType } from '@/models/Organization'
 import { Role } from '@/util/constants'
-import VendorConnections from '@/components/auth/account-settings/advance-settings/VendorConnections.vue'
-import VendorConnectionsTable from '@/components/auth/account-settings/advance-settings/VendorConnectionsTable.vue'
+import ThirdPartyConnections from '@/components/auth/account-settings/advance-settings/ThirdPartyConnections.vue'
+import ThirdPartyConnectionsTable from '@/components/auth/account-settings/advance-settings/ThirdPartyConnectionsTable.vue'
 import VueRouter from 'vue-router'
 import Vuetify from 'vuetify'
 
@@ -16,7 +16,7 @@ const vuetify = new Vuetify({})
 
 document.body.setAttribute('data-app', 'true')
 
-describe('VendorConnections.vue', () => {
+describe('ThirdPartyConnections.vue', () => {
   let wrapper: any
   let wrapperFactory: any
 
@@ -45,7 +45,7 @@ describe('VendorConnections.vue', () => {
     const $t = (key: string) => key
 
     wrapperFactory = () => {
-      return shallowMount(VendorConnections, {
+      return shallowMount(ThirdPartyConnections, {
         localVue,
         router,
         vuetify,
@@ -67,11 +67,11 @@ describe('VendorConnections.vue', () => {
     expect(wrapper.vm).toBeTruthy()
   })
 
-  it('renders VendorConnectionsTable', () => {
-    expect(wrapper.findComponent(VendorConnectionsTable).exists()).toBe(true)
+  it('renders ThirdPartyConnectionsTable', () => {
+    expect(wrapper.findComponent(ThirdPartyConnectionsTable).exists()).toBe(true)
   })
 
   it('renders the page title translation key', () => {
-    expect(wrapper.find('[data-test="vendor-connections-title"]').text()).toBe('vendorConnectionsTitle')
+    expect(wrapper.find('[data-test="vendor-connections-title"]').text()).toBe('thirdPartyConnectionsTitle')
   })
 })

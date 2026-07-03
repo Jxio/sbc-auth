@@ -340,7 +340,7 @@ import AccountMixin from '@/components/auth/mixins/AccountMixin.vue'
 import AccountSuspendAlert from '@/components/auth/common/AccountSuspendAlert.vue'
 import ConfigHelper from '@/util/config-helper'
 import { KCUserProfile } from 'sbc-common-components/src/models/KCUserProfile'
-import { canViewVendorConnections } from '@/util/vendor-connection-util'
+import { canViewThirdPartyConnections } from '@/util/third-party-connection-util'
 import { useOrgStore } from '@/stores/org'
 import { useUserStore } from '@/stores/user'
 
@@ -431,7 +431,7 @@ export default class AccountSettings extends Mixins(AccountMixin) {
   }
   // Team members (and staff) can view linking-keys — see auth-api org_linking_keys.py
   get vendorConnectionsPermission () {
-    return canViewVendorConnections(
+    return canViewThirdPartyConnections(
       this.currentMembership?.membershipTypeCode,
       this.currentUser?.roles
     )

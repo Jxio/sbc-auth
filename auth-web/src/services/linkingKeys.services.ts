@@ -1,4 +1,4 @@
-import { AccountLinkingKey, AccountLinkingKeysResponse, LinkingKeyActionDetails } from '@/models/vendorConnection'
+import { AccountLinkingKey, AccountLinkingKeysResponse, LinkingKeyActionDetails } from '@/models/thirdPartyConnection'
 
 import { AxiosResponse } from 'axios'
 import ConfigHelper from '@/util/config-helper'
