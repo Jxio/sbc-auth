@@ -1,6 +1,6 @@
 <template>
   <v-container class="vendor-connections-container">
-<div class="view-header flex-column mb-3">
+    <div class="view-header flex-column mb-3">
       <h2
         class="view-header__title"
         data-test="vendor-connections-title"
